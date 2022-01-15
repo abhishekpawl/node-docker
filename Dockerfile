@@ -2,7 +2,13 @@ ARG PORT
 FROM node:17
 WORKDIR /app
 ADD package*.json .
-RUN npm install
+
+ARG NODE_ENV
+RUN if [ "$NODE_ENV" = "development" ]; \
+    then npm install; \
+    else npm install --only=production; \
+    fi
+
 ADD . ./
 EXPOSE $PORT
-CMD ["npm", "run", "dev"]
+CMD ["node", "index.js"]
